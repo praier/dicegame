@@ -5,44 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주사위 대결 미니게임</title>
     <style>
-        /* 배경 이미지 적용 (수정된 부분) */
+        /* 1. 배경 이미지 및 기본 텍스트 색상 (진한 갈색으로 통일) */
         body { 
             font-family: '맑은 고딕', sans-serif; 
             text-align: center; 
             margin: 0; 
             padding: 20px; 
-            color: #333; 
-            background-image: url('image_b97f82.jpg'); /* 업로드한 배경 이미지 불러오기 */
-            background-size: cover; /* 화면을 가득 채우도록 비율 조정 */
-            background-position: center; /* 이미지 중앙 정렬 */
-            background-attachment: fixed; /* 스크롤해도 배경 고정 */
+            color: #4a3525; /* 텍스트를 진한 갈색으로 변경 */
+            background-image: url('image_b97f82.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
         }
         
-        /* 제목 영역 가독성 향상 (배경이 화려해도 글씨가 잘 보이게 반투명 박스 추가) */
-        .title-box {
-            background-color: rgba(255, 255, 255, 0.85); /* 85% 불투명도의 흰색 */
-            display: inline-block;
-            padding: 15px 30px;
+        /* 2. 공통 박스 디자인 (양피지 톤 + 나무색 테두리) */
+        .board-box {
+            background-color: rgba(245, 235, 220, 0.92); /* 따뜻한 크림/베이지 톤 */
+            border: 2px solid #a67b5b; /* 나무 느낌의 테두리 */
             border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3); /* 그림자를 조금 더 진하게 주어 입체감 부여 */
         }
-        h1 { color: #333; margin-top: 0; margin-bottom: 5px; }
-        .description { color: #555; margin-bottom: 0; font-weight: bold; }
 
-        /* 인원 선택 창 디자인 */
-        #setup-screen { background: rgba(255, 255, 255, 0.95); max-width: 400px; margin: 0 auto; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        /* 개별 영역 여백 및 세부 설정 */
+        .title-box { display: inline-block; padding: 15px 30px; margin-bottom: 20px; }
+        h1 { color: #3e2723; margin-top: 0; margin-bottom: 5px; }
+        .description { margin-bottom: 0; font-weight: bold; }
+
+        #setup-screen { max-width: 400px; margin: 0 auto; padding: 30px; }
         .input-group { margin: 20px 0; }
-        select { padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; width: 100%; box-sizing: border-box; }
+        select { padding: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #a67b5b; width: 100%; box-sizing: border-box; background-color: #fff9f0; color: #4a3525; }
         
-        /* 게임 화면 디자인 (처음엔 숨김) */
         #game-screen { display: none; }
         .game-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
-        .player-card { background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); width: 150px; display: flex; flex-direction: column; align-items: center; }
         
-        /* 주사위 애니메이션 관련 CSS */
+        .player-card { padding: 20px; width: 150px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* 주사위 애니메이션 */
         .dice-container { height: 100px; display: flex; align-items: center; justify-content: center; margin: 15px 0; perspective: 1000px; }
-        .dice { font-size: 70px; color: #444; display: inline-block; transition: transform 0.1s; }
+        .dice { font-size: 70px; color: #3e2723; display: inline-block; transition: transform 0.1s; }
         @keyframes roll {
             0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
             25% { transform: rotateX(90deg) rotateY(90deg) rotateZ(45deg); color: #8b4513; }
@@ -52,38 +52,38 @@
         }
         .rolling { animation: roll 0.4s linear infinite; }
 
-        button { padding: 12px 20px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.2s; }
-        .start-btn { background-color: #8b4513; width: 100%; margin-top: 10px; } /* 버튼 색상을 배경과 어울리는 우드톤으로 변경 */
+        /* 버튼 디자인 */
+        button { padding: 12px 20px; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.2s; box-shadow: 0 3px 5px rgba(0,0,0,0.2); }
+        .start-btn { background-color: #8b4513; width: 100%; margin-top: 10px; } 
         .start-btn:hover { background-color: #5c2e0b; }
         .roll-btn { background-color: #d2691e; width: 100%; }
         .roll-btn:hover { background-color: #a05217; }
-        .roll-btn:disabled { background-color: #cccccc; cursor: not-allowed; }
+        .roll-btn:disabled { background-color: #bfa593; cursor: not-allowed; color: #eee; box-shadow: none; }
+        .reset-btn { background-color: #6d4c41; margin-top: 10px; }
+        .reset-btn:hover { background-color: #4e342e; }
         
-        /* 결과 텍스트 박스 추가 */
-        .result-box { background: rgba(255, 255, 255, 0.9); display: inline-block; padding: 15px 30px; border-radius: 10px; margin: 25px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        #result-text { font-size: 24px; font-weight: bold; color: #d9534f; margin: 0; }
+        /* 결과 텍스트 박스 */
+        .result-box { display: inline-block; padding: 15px 30px; margin: 25px 0; }
+        #result-text { font-size: 24px; font-weight: bold; color: #c62828; margin: 0; }
 
-        .reset-btn { background-color: #6c757d; margin-top: 10px; }
-
-        /* 블로그 본문 및 하단 영역 CSS */
-        article { max-width: 800px; margin: 40px auto; text-align: left; padding: 30px; line-height: 1.6; background: rgba(255, 255, 255, 0.95); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        article h3 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 30px; }
-        .ad-space { margin-top: 40px; padding: 30px; background: rgba(233, 236, 239, 0.9); border: 2px dashed #adb5bd; color: #6c757d; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center; border-radius: 10px; }
+        /* 블로그 본문 및 하단 영역 */
+        article { max-width: 800px; margin: 40px auto; text-align: left; padding: 30px; line-height: 1.6; }
+        article h3 { color: #3e2723; border-bottom: 2px solid #d7ccc8; padding-bottom: 10px; margin-top: 30px; }
+        .ad-space { margin-top: 40px; padding: 30px; background: rgba(220, 210, 200, 0.8); border: 2px dashed #8d6e63; color: #5d4037; max-width: 600px; margin-left: auto; margin-right: auto; text-align: center; border-radius: 10px; }
         
-        footer { text-align: center; margin-top: 50px; padding: 20px; font-size: 14px; background: rgba(255, 255, 255, 0.85); border-radius: 10px; max-width: 600px; margin-left: auto; margin-right: auto; }
-        footer a { color: #333; text-decoration: none; margin: 0 10px; font-weight: bold; }
+        footer { text-align: center; margin-top: 50px; padding: 20px; font-size: 14px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        footer a { color: #4a3525; text-decoration: none; margin: 0 10px; font-weight: bold; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <!-- 가독성을 위해 제목을 박스 안에 넣었습니다 -->
-    <div class="title-box">
+    <div class="board-box title-box">
         <h1>🎲 주사위 대결 🎲</h1>
         <p class="description">친구들과 함께 주사위를 굴려 가장 높은 숫자를 뽑아보세요!</p>
     </div>
 
-    <!-- 1. 인원 설정 화면 -->
-    <div id="setup-screen">
+    <div id="setup-screen" class="board-box">
         <h2>게임 인원 설정</h2>
         <div class="input-group">
             <label for="player-count">참여할 인원을 선택하세요 (2~10명)</label>
@@ -102,25 +102,22 @@
         <button class="start-btn" onclick="startGame()">게임 시작하기</button>
     </div>
 
-    <!-- 2. 실제 게임 화면 -->
     <div id="game-screen">
         <div class="game-container" id="players-container"></div>
         
-        <div class="result-box">
+        <div class="board-box result-box">
             <div id="result-text">각자 주사위를 굴려주세요!</div>
         </div>
         <br>
         <button class="reset-btn" onclick="location.reload()">새로운 게임하기 (인원 재설정)</button>
     </div>
 
-    <!-- 애드센스 광고 영역 -->
     <div class="ad-space">
         이곳에 구글 애드센스 광고 코드를 삽입하세요.<br>
         (예: 디스플레이 광고 - 가로형 배너)
     </div>
 
-    <!-- 1,000자 블로그 본문 영역 -->
-    <article>
+    <article class="board-box">
         <h3>일상 속 결정 장애를 해결하는 완벽한 방법, 온라인 주사위 대결</h3>
         <p>일상생활에서 우리는 끊임없이 선택의 기로에 놓입니다. 친구들과 의견이 엇갈리거나, 오늘 점심 메뉴를 고르기 힘들 때, 혹은 간단한 내기를 해야 할 때 가장 공평하고 확실한 방법은 바로 '운'에 맡기는 것입니다. 이 웹사이트는 물리적인 주사위가 없을 때 언제 어디서나 스마트폰이나 PC를 통해 즉시 사용할 수 있는 무료 온라인 주사위 대결 미니게임입니다. 별도의 앱 설치나 복잡한 회원가입 과정 없이, 브라우저 접속 후 클릭 한 번으로 완벽한 난수(Random Number)를 생성하여 100% 공정한 결과를 제공합니다.</p>
 
@@ -141,8 +138,7 @@
         <p>더 이상 선택의 순간에 귀중한 시간을 낭비하지 마세요. 화면 상단의 [주사위 굴리기] 버튼을 누르는 즉시, 여러분의 고민은 가장 깔끔하고 유쾌하게 해결될 것입니다. 자주 사용하는 스마트폰 브라우저나 PC 즐겨찾기(북마크)에 이 페이지를 추가해 두시고, 일상 속 작은 재미와 결단이 필요한 순간마다 유용하게 꺼내어 활용해 보시기 바랍니다. 지금 바로 곁에 있는 친구에게 이 사이트 링크를 공유하고 첫 번째 승부를 겨뤄보세요!</p>
     </article>
 
-    <!-- 하단 메뉴 -->
-    <footer>
+    <footer class="board-box">
         <a href="index.html">홈</a> | 
         <a href="about.html">사이트 소개 (About)</a> | 
         <a href="contact.html">문의하기 (Contact)</a> | 
@@ -165,8 +161,9 @@
 
             for (let i = 0; i < totalPlayers; i++) {
                 const playerNum = i + 1;
+                // 플레이어 카드에도 동일하게 board-box 클래스 적용
                 const cardHTML = `
-                    <div class="player-card">
+                    <div class="board-box player-card">
                         <h3 style="margin: 0;">플레이어 ${playerNum}</h3>
                         <div class="dice-container">
                             <div class="dice" id="dice${playerNum}">❓</div>
